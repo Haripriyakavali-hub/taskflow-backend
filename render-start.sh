@@ -3,6 +3,7 @@ set -eu
 
 if [ -n "${DATABASE_URL:-}" ] && [ -z "${SPRING_DATASOURCE_URL:-}" ]; then
   database_url_without_scheme="${DATABASE_URL#postgresql://}"
+  database_url_without_scheme="${database_url_without_scheme#postgres://}"
   database_credentials="${database_url_without_scheme%@*}"
   database_host_path="${database_url_without_scheme#*@}"
 
