@@ -1,6 +1,5 @@
 package com.taskflow.config;
 
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
@@ -9,7 +8,7 @@ import com.taskflow.repository.UserRepository;
 
 @Component
 @Profile("render")
-public class RenderUserSeeder implements CommandLineRunner {
+public class RenderUserSeeder {
 
     private final UserRepository userRepository;
 
@@ -17,14 +16,14 @@ public class RenderUserSeeder implements CommandLineRunner {
         this.userRepository = userRepository;
     }
 
-    @Override
-    public void run(String... args) {
+    public int seedUsers() {
         String seedUsers = System.getenv("TASKFLOW_SEED_USERS");
 
         if (seedUsers == null || seedUsers.isBlank()) {
-            return;
+            return 0;
         }
 
+        int seeded = 0;
         for (String row : seedUsers.split("\\r?\\n")) {
             if (row.isBlank()) {
                 continue;
@@ -51,6 +50,9 @@ public class RenderUserSeeder implements CommandLineRunner {
             user.setRole(role);
 
             userRepository.save(user);
+            seeded++;
         }
+
+        return seeded;
     }
 }
